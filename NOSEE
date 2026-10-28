@@ -1,0 +1,33 @@
+.github/workflows/build.ymlname: Build Luh Proxy APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar proyecto
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Compilar APK
+        run: |
+          unzip -o LuhProxyAndroid.zip -d proyecto
+          cd proyecto
+          gradle assembleDebug
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LuhProxy-APK
+          path: proyecto/app/build/outputs/apk/debug/*.apk
+
